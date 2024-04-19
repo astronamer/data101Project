@@ -67,3 +67,37 @@ test<-NaivePredict(model, test)
 #print a confusion matrix based on the predictions of the naive bayes model
 Loan_Bayes<-table(train$predictions, train$Loan_Status)
 caret::confusionMatrix(Loan_Bayes)
+
+
+#Boxplots
+
+
+boxplot(data$ApplicantIncome~data$Loan_Status,ylab = "credit ", main = " applicant income  vs loan status ", col = "red")
+
+boxplot(data$CoapplicantIncome~data$loan_Status,ylab = "loan amount" , main = " CoapplicantIncome vs loan status  ", col = "red")
+
+
+boxplot(data$Dependents~data$Loan_Status,ylab = "Dependents" , main = "num dependents vs loan status", col = "red")
+
+
+boxplot(data$loanAmount~data$Loan_Status,ylab = "loan amount" , main = " loan amount  vs loan status  ", col = "red")
+
+boxplot(data$loan_Amount_Term~data$Loan_Status,ylab = "loan term" , main = " loan  term  vs loan status  ", col = "red")
+
+
+#boxplot(data$CoapplicantIncome~data$loan_status,ylab = "loan amount" , main = "num dependents vs loan status", col = "red")
+
+#boxplot(data$bank_asset_value~data$loan_status,ylab = "loan amount" , main = " bank asset vs loan status", col = "red")
+
+#boxplot(data$commercial_assets_value~data$loan_status,ylab = "loan amount" , main = " commercial  asset vs loan status", col = "red")
+
+#boxplot(data$luxury_assets_value~data$loan_status,ylab = "loan amount" , main = " luxury  asset vs loan status", col = "red")
+
+
+
+#boxplot(data$residential_assets_value~data$loan_status,ylab = "loan amount" , main = " residential asset vs loan status", col = "red")
+
+
+#boxplot(data$income_annum~data$loan_status,ylab = "loan amount" , main = " income annually vs loan status", col = "red")
+
+

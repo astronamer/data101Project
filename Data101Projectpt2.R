@@ -23,7 +23,7 @@ cleanData<-function(data){#function to clean dataframe
 }
 model<-function(frame){#creates the tree for the training data
   library(rpart)
-  tree<-rpart(Loan_Status ~ Emphasize + totincome + Gender + Married + Dependents + Education + Self_Employed + ApplicantIncome + CoapplicantIncome + LoanAmount + Loan_Amount_Term + Credit_History + Property_Area, data=frame, control=rpart.control(cp=.007), method="class")
+  tree<-rpart(Loan_Status ~ Gender + Married + Dependents + Education + Self_Employed + ApplicantIncome + CoapplicantIncome + LoanAmount + Loan_Amount_Term + Credit_History + Property_Area, data=frame, control=rpart.control(cp=.007), method="class")
   tree
 }
 graphTree<-function(tree){#graphs the tree
@@ -32,7 +32,7 @@ graphTree<-function(tree){#graphs the tree
 }
 NaiveBayes<-function(frame){#creates a naive bayes model out of the dataframe
   library(e1071)
-  naive_bayes_model <- naiveBayes(Loan_Status ~ loanOverIncome  + Gender + Married + Dependents + Education + Self_Employed + ApplicantIncome + CoapplicantIncome + LoanAmount + Loan_Amount_Term + Credit_History + Property_Area, data=frame)
+  naive_bayes_model <- naiveBayes(Loan_Status ~ Gender + Married + Dependents + Education + Self_Employed + ApplicantIncome + CoapplicantIncome + LoanAmount + Loan_Amount_Term + Credit_History + Property_Area, data=frame)
   naive_bayes_model
 
 }
@@ -70,32 +70,29 @@ test<-NaivePredict(model, test)
 Loan_Bayes<-table(train$predictions, train$Loan_Status)
 caret::confusionMatrix(Loan_Bayes)
 
+pdf("plot.pdf")
 
-#Boxplots
+boxplot(train$ApplicantIncome~train$Loan_Status, xlab = "Loan Status" ,ylab = "Applicant Income ", main = " applicant income  vs loan status ", col = "red")
 
-
-#boxplot(train$ApplicantIncome~train$Loan_Status, ylab = "credit ", main = " applicant income  vs loan status ", col = "red")
-
-#boxplot(train$CoapplicantIncome~train$Loan_Status,ylab = "loan amount" , main = " CoapplicantIncome vs loan status  ", col = "red")
+boxplot(train$CoapplicantIncome~train$Loan_Status,xlab = "Loan Status" ,ylab = "Coapplicant Income" , main = " CoapplicantIncome vs loan status  ", col = "red")
 
 
-#mosaicplot(train$Dependents~train$Loan_Status,ylab = "Dependents" , main = "num dependents vs loan status", col = "red")
+mosaicplot(train$Dependents~train$Loan_Status,ylab = "Loan Status" ,xlab = "Dependents" , main = "num dependents vs loan status", col = "red")
 
+boxplot(train$LoanAmount~train$Loan_Status,xlab = "Loan Status" ,ylab = "loan amount" , main = " loan amount  vs loan status  ", col = "red")
 
-#boxplot(train$LoanAmount~train$Loan_Status,ylab = "loan amount" , main = " loan amount  vs loan status  ", col = "red")
+boxplot(train$Loan_Amount_Term~train$Loan_Status,xlab = "Loan Status" ,ylab = "loan term" , main = " loan  term  vs loan status  ", col = "red")
 
-#boxplot(train$Loan_Amount_Term~train$Loan_Status,ylab = "loan term" , main = " loan  term  vs loan status  ", col = "red")
+mosaicplot(train$Property_Area~train$Loan_Status,ylab = "Loan Status" ,xlab="Property Area", main = "Property Area vs loan status", col = "red")
 
-#mosaicplot(train$Property_Area~train$Loan_Status,ylab = "Loan Status" ,xlab="Property Area", main = "Property Area vs loan status", col = "red")
+mosaicplot(train$Credit_History~train$Loan_Status,ylab = "Loan Status" ,xlab="Credit History", main = "Credit History vs loan status", col = "red")
 
-#mosaicplot(train$Credit_History~train$Loan_Status,ylab = "Loan Status" ,xlab="Credit History", main = "Credit History vs loan status", col = "red")
+mosaicplot(train$Gender~train$Loan_Status,ylab = "Loan Status" ,xlab="Gender", main = "Gender vs loan status", col = "red")
 
-#mosaicplot(train$Gender~train$Loan_Status,ylab = "Loan Status" ,xlab="Gender", main = "Gender vs loan status", col = "red")
+mosaicplot(train$Married~train$Loan_Status,ylab = "Loan Status" ,xlab="Married", main = "Married vs loan status", col = "red")
 
-#mosaicplot(train$Married~train$Loan_Status,ylab = "Loan Status" ,xlab="Married", main = "Married vs loan status", col = "red")
+mosaicplot(train$Education~train$Loan_Status,ylab = "Loan Status" ,xlab="Education", main = "Education vs loan status", col = "red")
 
-#mosaicplot(train$Education~train$Loan_Status,ylab = "Loan Status" ,xlab="Education", main = "Education vs loan status", col = "red")
+mosaicplot(train$Self_Employed~train$Loan_Status,ylab = "Loan Status" ,xlab="Self Employed", main = "Self Employed vs loan status", col = "red")
 
-#mosaicplot(train$Self_Employed~train$Loan_Status,ylab = "Loan Status" ,xlab="Self Employed", main = "Self Employed vs loan status", col = "red")
-
-train
+dev.off()

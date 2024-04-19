@@ -7,6 +7,7 @@ readtest<-function(){#function which returns a dataframe with the data from the 
   test
 }
 cleanData<-function(data){#function to clean dataframe
+  data$Emphasize<-((data$CoapplicantIncome)^2)
   data$Gender<-factor(data$Gender)
   data$Dependents<-factor(data$Dependents)
   data$Education<-factor(data$Education)
@@ -22,7 +23,7 @@ cleanData<-function(data){#function to clean dataframe
 }
 model<-function(frame){#creates the tree for the training data
   library(rpart)
-  tree<-rpart(Loan_Status ~ totincome + Gender + Married + Dependents + Education + Self_Employed + ApplicantIncome + CoapplicantIncome + LoanAmount + Loan_Amount_Term + Credit_History + Property_Area, data=frame, control=rpart.control(cp=.005), method="class")
+  tree<-rpart(Loan_Status ~ Emphasize + totincome + Gender + Married + Dependents + Education + Self_Employed + ApplicantIncome + CoapplicantIncome + LoanAmount + Loan_Amount_Term + Credit_History + Property_Area, data=frame, control=rpart.control(cp=.007), method="class")
   tree
 }
 graphTree<-function(tree){#graphs the tree
@@ -31,7 +32,7 @@ graphTree<-function(tree){#graphs the tree
 }
 NaiveBayes<-function(frame){#creates a naive bayes model out of the dataframe
   library(e1071)
-  naive_bayes_model <- naiveBayes(Loan_Status ~ loanOverIncome + totincome + Gender + Married + Dependents + Education + Self_Employed + ApplicantIncome + CoapplicantIncome + LoanAmount + Loan_Amount_Term + Credit_History + Property_Area, data=frame)
+  naive_bayes_model <- naiveBayes(Loan_Status ~ loanOverIncome  + Gender + Married + Dependents + Education + Self_Employed + ApplicantIncome + CoapplicantIncome + LoanAmount + Loan_Amount_Term + Credit_History + Property_Area, data=frame)
   naive_bayes_model
 
 }
@@ -41,7 +42,7 @@ NaivePredict<-function(model, frame){#makes a prediction based off of the naive 
 }
 #load library
 library(rpart)
-
+library(carat)
 #make the dataframes
 train<-readtrain()
 test<-readtest()
@@ -55,7 +56,8 @@ pred_Loan_Status<-rpart.predict(tree, train, type='class')
 test$pred_Loan_Status<-rpart.predict(tree, test, type='class')
 
 #print a confusion matrix from predictions
-table(pred_Loan_Status, train$Loan_Status)
+Loan_Tree<-table(pred_Loan_Status, train$Loan_Status)
+caret::confusionMatrix(Loan_Tree)
 
 #generate a naive bayes model
 model<-NaiveBayes(train)
@@ -72,32 +74,28 @@ caret::confusionMatrix(Loan_Bayes)
 #Boxplots
 
 
-boxplot(data$ApplicantIncome~data$Loan_Status,ylab = "credit ", main = " applicant income  vs loan status ", col = "red")
+#boxplot(train$ApplicantIncome~train$Loan_Status, ylab = "credit ", main = " applicant income  vs loan status ", col = "red")
 
-boxplot(data$CoapplicantIncome~data$loan_Status,ylab = "loan amount" , main = " CoapplicantIncome vs loan status  ", col = "red")
-
-
-boxplot(data$Dependents~data$Loan_Status,ylab = "Dependents" , main = "num dependents vs loan status", col = "red")
+#boxplot(train$CoapplicantIncome~train$Loan_Status,ylab = "loan amount" , main = " CoapplicantIncome vs loan status  ", col = "red")
 
 
-boxplot(data$loanAmount~data$Loan_Status,ylab = "loan amount" , main = " loan amount  vs loan status  ", col = "red")
-
-boxplot(data$loan_Amount_Term~data$Loan_Status,ylab = "loan term" , main = " loan  term  vs loan status  ", col = "red")
+#mosaicplot(train$Dependents~train$Loan_Status,ylab = "Dependents" , main = "num dependents vs loan status", col = "red")
 
 
-#boxplot(data$CoapplicantIncome~data$loan_status,ylab = "loan amount" , main = "num dependents vs loan status", col = "red")
+#boxplot(train$LoanAmount~train$Loan_Status,ylab = "loan amount" , main = " loan amount  vs loan status  ", col = "red")
 
-#boxplot(data$bank_asset_value~data$loan_status,ylab = "loan amount" , main = " bank asset vs loan status", col = "red")
+#boxplot(train$Loan_Amount_Term~train$Loan_Status,ylab = "loan term" , main = " loan  term  vs loan status  ", col = "red")
 
-#boxplot(data$commercial_assets_value~data$loan_status,ylab = "loan amount" , main = " commercial  asset vs loan status", col = "red")
+#mosaicplot(train$Property_Area~train$Loan_Status,ylab = "Loan Status" ,xlab="Property Area", main = "Property Area vs loan status", col = "red")
 
-#boxplot(data$luxury_assets_value~data$loan_status,ylab = "loan amount" , main = " luxury  asset vs loan status", col = "red")
+#mosaicplot(train$Credit_History~train$Loan_Status,ylab = "Loan Status" ,xlab="Credit History", main = "Credit History vs loan status", col = "red")
 
+#mosaicplot(train$Gender~train$Loan_Status,ylab = "Loan Status" ,xlab="Gender", main = "Gender vs loan status", col = "red")
 
+#mosaicplot(train$Married~train$Loan_Status,ylab = "Loan Status" ,xlab="Married", main = "Married vs loan status", col = "red")
 
-#boxplot(data$residential_assets_value~data$loan_status,ylab = "loan amount" , main = " residential asset vs loan status", col = "red")
+#mosaicplot(train$Education~train$Loan_Status,ylab = "Loan Status" ,xlab="Education", main = "Education vs loan status", col = "red")
 
+#mosaicplot(train$Self_Employed~train$Loan_Status,ylab = "Loan Status" ,xlab="Self Employed", main = "Self Employed vs loan status", col = "red")
 
-#boxplot(data$income_annum~data$loan_status,ylab = "loan amount" , main = " income annually vs loan status", col = "red")
-
-
+train

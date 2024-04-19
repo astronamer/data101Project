@@ -16,7 +16,9 @@ cleanData<-function(data){#function to clean dataframe
   data$Property_Area<-factor(data$Property_Area)
   data$totincome<-data$ApplicantIncome+data$CoapplicantIncome
   data$loanOverIncome<-(data$LoanAmount/data$totincome)
-  data
+  data#CreditScoreOv
+
+  
 }
 model<-function(frame){#creates the tree for the training data
   library(rpart)
@@ -63,4 +65,5 @@ train<-NaivePredict(model, train)
 test<-NaivePredict(model, test)
 
 #print a confusion matrix based on the predictions of the naive bayes model
-table(train$predictions, train$Loan_Status)
+Loan_Bayes<-table(train$predictions, train$Loan_Status)
+caret::confusionMatrix(Loan_Bayes)
